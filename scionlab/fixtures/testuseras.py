@@ -12,32 +12,29 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from scionlab.fixtures.testuser import get_testuser_exbert
+from scionlab.fixtures.testuser import get_testuser_admin
 from scionlab.models.user_as import AttachmentPoint, AttachmentConf, UserAS
 
 
 def create_testuserases():
-    exbert = get_testuser_exbert()
+    exbert = get_testuser_admin()
     aps = AttachmentPoint.objects.all()
-    _create_user_as(exbert, aps[0], UserAS.VM, True)
-    _create_user_as(exbert, aps[1], UserAS.VM, False)
-    _create_user_as(exbert, aps[2], UserAS.PKG, False)
-    _create_user_as(exbert, aps[3], UserAS.PKG, True)
-    _create_user_as(exbert, aps[0], UserAS.SRC, False)
+    _create_user_as(exbert, aps[0], UserAS.VM, False, 'vm-2', '240a:a066:100:1::12')
+    _create_user_as(exbert, aps[0], UserAS.SRC, False, 'vm-3', '240a:a066:100:1::13')
 
 
-def _create_user_as(owner, attachment_point, installation_type, use_vpn):
+def _create_user_as(owner, attachment_point, installation_type, use_vpn, label, public_ip):
     user_as = UserAS.objects.create(
         owner=owner,
         installation_type=installation_type,
-        label="",
+        label=label,
         isd=attachment_point.AS.isd
     )
     user_as.update_attachments([
         AttachmentConf(
             attachment_point=attachment_point,
             use_vpn=use_vpn,
-            public_ip='172.31.0.200',
-            public_port=54321,
+            public_ip=public_ip,
+            public_port=54321
         ),
     ])

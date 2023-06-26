@@ -32,6 +32,9 @@ def get_testuser_exbert():
     """ Return the User object for Exbert """
     return User.objects.get(email=TESTUSER_EXBERT_EMAIL)
 
+def get_testuser_admin():
+    """ Return the User object for admin """
+    return User.objects.get(email=TESTUSER_ADMIN_EMAIL)
 
 # Explicitly make `get_testuser` and `get_testuser_admin` not a test;
 # nose thinks this looks like a test...
