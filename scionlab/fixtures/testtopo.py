@@ -51,10 +51,14 @@ isds = [
 # ASes
 ases = [
     makeASdef(16, 0x1101, 'vm-1', '240a:a066:100:1::11', is_core=True, is_ap=True),
+    makeASdef(16, 0x1102, 'vm-2', '240a:a066:100:1::12', is_core=False, is_ap=False),
+    makeASdef(16, 0x1103, 'vm-3', '240a:a066:100:1::13', is_core=False, is_ap=False),
 ]
 
 # Links
 links = [
+    makeLinkDef(Link.PROVIDER, 0x1101, 0x1102),
+    makeLinkDef(Link.PROVIDER, 0x1101, 0x1103),
 ]
 
 
@@ -121,15 +125,13 @@ def name_hosts():
 
 def _create_as(isd_id, as_id, label, public_ip, is_core=False, is_ap=False):
     isd = ISD.objects.get(isd_id=isd_id)
-    owner = User.objects.get(email='admin@scionlab.org')
     as_ = AS.objects.create_with_default_services(
         isd=isd,
         as_id=as_id,
         label=label,
         is_core=is_core,
         public_ip=public_ip,
-        init_certificates=False,  # Defer certificates generation
-        owner=owner,
+        init_certificates=False  # Defer certificates generation
     )
 
     if is_ap:
